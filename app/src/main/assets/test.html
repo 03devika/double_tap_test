@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessibility Tap Test</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          padding-top: 100px;
+        }
+
+        #status {
+          font-size: 24px;
+          margin-top: 40px;
+          color: green;
+        }
+
+        button.tap-box {
+          width: 300px;
+          height: 300px;
+          font-size: 20px;
+          border: 2px dashed #aaa;
+          background-color: #f0f0f0;
+          line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+<h1>TalkBack Tap Test</h1>
+
+<button
+        id="box"
+        class="tap-box"
+        aria-label="Tap this button to activate.">
+    Tap Here
+</button>
+
+<div id="status">Waiting for tap...</div>
+
+<script>
+    const box = document.getElementById('box');
+    const status = document.getElementById('status');
+    let canTap = true;
+
+    box.addEventListener('click', () => {
+      if (!canTap) return;
+
+      canTap = false;
+      status.innerText = '✅ Tap Detected!';
+      box.disabled = true; // visually dims the button and blocks TalkBack taps
+
+      setTimeout(() => {
+        canTap = true;
+        box.disabled = false;
+        status.innerText = '⏳ Tap again when ready.';
+      }, 3000); // 3 second timeout
+    });
+</script>
+</body>
+</html>
