@@ -8,90 +8,43 @@
         body {
           font-family: Arial, sans-serif;
           text-align: center;
-          padding-top: 100px;
-          background-color: #f9f9f9;
-        }
-
-        h1 {
-          color: #333;
-        }
-
-        #status {
-          font-size: 20px;
-          margin-top: 40px;
-          color: #2e7d32;
+          padding: 40px;
         }
 
         .tap-box {
-          width: 150px;
-          height: 150px;
-          font-size: 16px;
-          font-weight: bold;
-          border: 2px solid #90caf9;
-          background-color: #e3f2fd;
-          border-radius: 16px;
-          margin: 15px;
-          box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-          transition: all 0.2s ease-in-out;
-          cursor: pointer;
+          width: 100px;
+          height: 100px;
+          font-size: 14px;
+          margin: 10px;
         }
 
-        .tap-box:disabled {
-          background-color: #ddd;
-          color: #888;
-          cursor: not-allowed;
-          box-shadow: none;
-        }
-
-        .tap-box:hover:not(:disabled) {
-          background-color: #bbdefb;
-          transform: scale(1.05);
+        #status {
+          font-size: 18px;
+          margin-top: 30px;
         }
     </style>
 </head>
 <body>
 <h1>TalkBack Tap Test</h1>
 
-<button
-        id="box1"
-        class="tap-box"
-        aria-label="Tap this button to activate Button One.">
-    Tap Button 1
-</button>
-
-<button
-        id="box2"
-        class="tap-box"
-        aria-label="Tap this button to activate Button Two.">
-    Tap Button 2
-</button>
+<button id="box1" class="tap-box" aria-label="Tap Button 1">Tap 1</button>
+<button id="box2" class="tap-box" aria-label="Tap Button 2">Tap 2</button>
+<button id="box3" class="tap-box" aria-label="Tap Button 3">Tap 3</button>
+<button id="box4" class="tap-box" aria-label="Tap Button 4">Tap 4</button>
 
 <div id="status">Waiting for tap...</div>
 
 <script>
-    const box1 = document.getElementById('box1');
-    const box2 = document.getElementById('box2');
     const status = document.getElementById('status');
-    let canTap = true;
 
-    function handleTap(button) {
-      if (!canTap) return;
-
-      canTap = false;
-      status.innerText = `✅ ${button} Tap Detected!`;
-      box1.disabled = true;
-      box2.disabled = true;
-
-      setTimeout(() => {
-        canTap = true;
-        box1.disabled = false;
-        box2.disabled = false;
-        status.innerText = '⏳ Tap again when ready.';
-      }, 1500);
+    function handleTap(buttonLabel) {
+      status.innerText = `✅ ${buttonLabel} Tap Detected!`;
     }
 
-    box1.addEventListener('click', () => handleTap("Button 1"));
-    box2.addEventListener('click', () => handleTap("Button 2"));
+    document.getElementById('box1').addEventListener('click', () => handleTap("Button 1"));
+    document.getElementById('box2').addEventListener('click', () => handleTap("Button 2"));
+    document.getElementById('box3').addEventListener('click', () => handleTap("Button 3"));
+    document.getElementById('box4').addEventListener('click', () => handleTap("Button 4"));
 </script>
 </body>
 </html>
