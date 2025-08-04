@@ -22,29 +22,72 @@
           font-size: 18px;
           margin-top: 30px;
         }
+
+        /* Make the live region visually hidden but accessible */
+        #live-announce {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip: rect(1px, 1px, 1px, 1px); /* old method */
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
     </style>
 </head>
 <body>
 <h1>TalkBack Tap Test</h1>
 
-<button id="box1" class="tap-box" aria-label="Tap Button 1">Tap 1</button>
-<button id="box2" class="tap-box" aria-label="Tap Button 2">Tap 2</button>
-<button id="box3" class="tap-box" aria-label="Tap Button 3">Tap 3</button>
-<button id="box4" class="tap-box" aria-label="Tap Button 4">Tap 4</button>
+<button id="box1" class="tap-box" aria-label="Tap Button 1" tabindex="0">Tap 1</button>
+<button id="box2" class="tap-box" aria-label="Tap Button 2" tabindex="0">Tap 2</button>
+<button id="box3" class="tap-box" aria-label="Tap Button 3" tabindex="0">Tap 3</button>
+<button id="box4" class="tap-box" aria-label="Tap Button 4" tabindex="0">Tap 4</button>
 
 <div id="status">Waiting for tap...</div>
 
+<!-- 🔊 Live region for screen reader -->
+<div id="live-announce" aria-live="polite" role="status"></div>
+
+<!-- 🔊 Audio -->
+<audio id="clickSound" preload="auto">
+    <source src="click_sound.mp3" type="audio/mpeg" />
+</audio>
+
 <script>
     const status = document.getElementById('status');
+    const liveAnnounce = document.getElementById('live-announce');
+    const audioClickSound = new Audio('click_sound.mp3');
 
     function handleTap(buttonLabel) {
+      // Update visual status
       status.innerText = `✅ ${buttonLabel} Tap Detected!`;
+
+      // Play sound
+      try {
+        audioClickSound.currentTime = 0;
+        audioClickSound.play();
+      } catch (err) {
+        console.log("Audio playback failed:", err);
+      }
+
+      // Trigger TalkBack announcement
+      liveAnnounce.innerText = `${buttonLabel} pressed`;
+
+      // Optional: Android vibration
+      if (window.AndroidInterface) {
+        window.AndroidInterface.vibrate();
+      }
     }
 
-    document.getElementById('box1').addEventListener('click', () => handleTap("Button 1"));
-    document.getElementById('box2').addEventListener('click', () => handleTap("Button 2"));
-    document.getElementById('box3').addEventListener('click', () => handleTap("Button 3"));
-    document.getElementById('box4').addEventListener('click', () => handleTap("Button 4"));
+    const addTapListener = (id, label) => {
+      const el = document.getElementById(id);
+      el.addEventListener('pointerup', () => handleTap(label));
+    };
+
+    addTapListener('box1', 'Button 1');
+    addTapListener('box2', 'Button 2');
+    addTapListener('box3', 'Button 3');
+    addTapListener('box4', 'Button 4');
 </script>
 </body>
 </html>
